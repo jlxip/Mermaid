@@ -1,6 +1,6 @@
 <h1>M E R M A I D</h1><br>
 
-<h3>English descrption of the program, scroll down for the Spanish one.</h3><br><br>
+<h3>English descrption of the program, scroll down for the Spanish one.</h3><br>
 
 <h2>Introduction</h2>
 Mermaid is a program which generates metasploit "windows/meterpreter/reverse_tcp" exploit.<br>
@@ -28,7 +28,7 @@ it's possible to use UPX (for losing size, with it you can get a just 5kb exe fi
 it's undetectable.<br><br><br>
 
 
-<h3>Spanish description.</h3><br><br>
+<h3>Spanish description.</h3><br>
 
 <h2>Introducción</h2>
 Mermaid es un programa que genera exploits "windows/meterpreter/reverse_tcp" de metasploit.<br>
