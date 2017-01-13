@@ -8,8 +8,8 @@
 
 
                     The Ultimate Packer for eXecutables
-   Copyright (c) 1996-2013 Markus Oberhumer, Laszlo Molnar & John Reiser
-                        http://upx.sourceforge.net
+   Copyright (c) 1996-2016 Markus Oberhumer, Laszlo Molnar & John Reiser
+                           https://upx.github.io
 
 
 
@@ -81,12 +81,7 @@ Please report all problems or suggestions to the authors. Thanks.
 THE FUTURE
 ==========
 
-  - We'd really love to support handheld systems like the PalmPilot because
-    compression makes a lot of sense here. And - because of the atari/tos
-    format - we already have a working decompressor in 68000 assembly.
-    Unfortunately we know next to nothing about the operating system
-    architecture of such handhelds, so we need some information from
-    an expert. Please contact us if you think you can help.
+  - AArch64 (64-bit ARM) for Linux and iOS.
 
   - The Linux approach could probably get ported to a lot of other Unix
     variants, at least for other i386 architectures it shouldn't be too
@@ -108,9 +103,9 @@ THE FUTURE
 COPYRIGHT
 =========
 
-Copyright (C) 1996-2013 Markus Franz Xaver Johannes Oberhumer
-Copyright (C) 1996-2013 Laszlo Molnar
-Copyright (C) 2000-2013 John F. Reiser
+Copyright (C) 1996-2016 Markus Franz Xaver Johannes Oberhumer
+Copyright (C) 1996-2016 Laszlo Molnar
+Copyright (C) 2000-2016 John F. Reiser
 
 This program may be used freely, and you are welcome to
 redistribute it under certain conditions.
@@ -125,12 +120,14 @@ with this program; see the file LICENSE. If not, visit the UPX home page.
 
 
 Share and enjoy,
-Markus & Laszlo
+Markus & Laszlo & John
 
 
    Markus F.X.J. Oberhumer              Laszlo Molnar
-   <markus@oberhumer.com>               <ml1050@users.sourceforge.net>
+   <markus@oberhumer.com>               <ezerotven+github@gmail.com>
 
+   John F. Reiser
+   <jreiser@BitWagon.com>
 
 
 [ The term UPX is a shorthand for the Ultimate Packer for eXecutables
