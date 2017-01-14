@@ -346,7 +346,7 @@ public class EditProfile extends JDialog {
 		panel_1.add(file);
 		file.setColumns(10);
 		
-		JLabel lblForExampleConnectorexe = new JLabel("For example: connector.exe");
+		JLabel lblForExampleConnectorexe = new JLabel("Example: connector.exe");
 		lblForExampleConnectorexe.setBounds(12, 304, 165, 16);
 		panel_1.add(lblForExampleConnectorexe);
 		
@@ -521,7 +521,7 @@ public class EditProfile extends JDialog {
             return;
         }
         if(FILE.equals("")){
-            JOptionPane.showMessageDialog(this, "You've to introduce an installationf file!");
+            JOptionPane.showMessageDialog(this, "You've to introduce an installation file!");
             return;
         }
         

