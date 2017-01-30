@@ -110,13 +110,13 @@ public class Build extends JDialog {
 			        String ADDFIREWALL = PROFILE.ADDFIREWALL;           // "
 			        String MELT = PROFILE.MELT;                         // "
 			        
-			        // PRIMER PASO: CREAR EL PAYLOAD
+			        // PRIMER PASO: CREAR EL EXPLOIT
 			        File choosed = new File(output.getText());  // Hacemos un nuevo archivo con la ruta especificada
 			        String choosedPath = choosed.getAbsolutePath();     // Sacamos la ruta en un String
 			        Pattern raw_slatch_pattern = Pattern.compile(Pattern.quote(File.separator));  // Hacemos un nuevo patrón para separar Strings con el separador del sistema operativo: \ en Windows y / en Linux y MAC OS X
 			        String[] slatches = raw_slatch_pattern.split(choosedPath);      // Separamos la variable con la ruta en un array de Strings
 
-			        String choosedFolderPath = "";      // Variable para almacenar la carpeta donde se creará el payload
+			        String choosedFolderPath = "";      // Variable para almacenar la carpeta donde se creará el exploit
 			        for(int i=0;i<slatches.length-1;i++){   // Por cada separador... (menos el último)
 			            choosedFolderPath = choosedFolderPath + slatches[i] + File.separator; // Añadimos a choosedFolderPath, el separador actual y el separador del sistema
 			        }
@@ -154,7 +154,7 @@ public class Build extends JDialog {
 			            UPX(choosed.getAbsolutePath());     // Pasar el instalador por UPX
 			        }
 			        
-			        JOptionPane.showMessageDialog(me, "The payload has been generated.");     // Creamos un mensaje de texto que aclara que el payload ha sido generado
+			        JOptionPane.showMessageDialog(me, "The exploit has been generated.");     // Creamos un mensaje de texto que aclara que el exploit ha sido generado
 			        dispose();
 				}
 			});

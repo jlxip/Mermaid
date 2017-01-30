@@ -34,18 +34,12 @@ public class GenerateHexTrojan {
             ex.printStackTrace();
         }
         
-        String hexed = bytesToHex(array);   // Creamos un nuevo String con la salida del método bytesToHex pasándole el array de bytes como argumento
-        return hexed;   // Devolvemos la variable hexed
-    }
-    
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray(); //Creamos un array de carácteres con todos los carácteres posibles en el lenguaje hexadecimal
-    public static String bytesToHex(byte[] bytes) { // FUNCIÓN PARA CONVERTIR UN ARRAY DE BYTES EN UNA CADENA HEXADECIMAL
-        char[] hexChars = new char[bytes.length * 2];       // La verdad es que no sé muy bien cómo funciona esto, lo admito.
-        for ( int j = 0; j < bytes.length; j++ ) {          // Lo encontré en este StackOverflow:
-            int v = bytes[j] & 0xFF;                        // http://goo.gl/ETe6us
-            hexChars[j * 2] = hexArray[v >>> 4];            // 
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];       // Siento la desinformación :S
+        final StringBuilder builder = new StringBuilder();
+        for(byte b : array) {
+            builder.append(String.format("0x%02x, ", b));
         }
-        return new String(hexChars);    // Devolvemos un nuevo String con el array de carácteres hexChars
+        
+        String hexed = builder.toString();   // Creamos un nuevo String con la salida del método bytesToHex pasándole el array de bytes como argumento
+        return hexed;   // Devolvemos la variable hexed
     }
 }
