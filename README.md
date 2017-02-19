@@ -1,5 +1,6 @@
 # M E R M A I D
-_Generate customized and undetectable exploits for Metasploit_
+_Generate customized and undetectable exploits for Metasploit._<br>
+**[Download](https://github.com/jlxip/Mermaid/releases)**
 
 <h1 align='center'><img width='400' src='http://i.imgur.com/taEiE54.png'><br><br></h1>
 
