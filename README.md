@@ -1,55 +1,50 @@
-<h1>M E R M A I D</h1><br>
+# M E R M A I D
+_Generate customized and undetectable exploits for Metasploit_
 
-<h3>English descrption of the program, scroll down for the Spanish one.</h3><br>
+<h1 align='center'><img width='400' src='http://i.imgur.com/taEiE54.png'><br><br></h1>
 
-<h2>Introduction</h2>
-Mermaid is a program which generates metasploit "windows/meterpreter/reverse_tcp" exploit.<br>
-It's written in multi-platform java, so it doesn't matter if it's runned on Windows, Linux or MAC OS X
-(obviously taget machine HAS to be Windows).<br>
-I am absolutely not responsible about the use you give to the program.<br><br>
+## What?
+Mermaid is a program (Java) which can generate customized exploits (with a lot of options) for windows machines.<br>
+There are three types of exploits so far:<br>
+### VeilEvasion's c/meterpreter/reverse_tcp
+The common exploit, which connects to Metasploit server. Courtesy of Veil Evasion.<br>
+An IP and port is required in order to use it.
+### MerBin
+An improved exploit, which requires a previously generated shellcode (\x00), and executes it in memory.<br>
+### MerCodeBin
+The best one, requires a shellcode (\x00), and uploads it to Pastebin. Then, when the exploit is running, downloads the shellcode from there and executes it in runtime.<br>
 
-<h2>How does it work?</h2>
-The program lets you generate a customized exploit with some options, like:<br>
-- Obviously select IP/DNS and connection port.<br>
-- The path where exploit will be installed in the taget machine.<br>
-- The possibility of adding to the registry (HKCU and/or HKLM).<br>
-- Disable UAC.<br>
-- Disable Firewall.<br>
-- Add Firewall exception.<br>
-- Melt the executable.<br><br>
+## The program
+### Interface
+The main interface is minimal.<br>
+![Main](http://i.imgur.com/Pv3sQ8I.png)<br>
+The first time you open Mermaid, a file ("profiles.dat") is created in the same directory, which will contain the configuration of all exploits you create.<br>
+The buttons located in the right, do pretty much what they seem to do (lol).
 
-The exploit will be written in C language and it's compiled with the integrated compiler TCC.<br>
-Mermaid gives you the option to pass the compiled executable through UPX for substract file size.<br><br>
+### Let's create an exploit
+![Options](http://i.imgur.com/Gv0SCe7.png)<br>
+First of all, you must assign a name to the current profile.<br>
+Then, as you can see, there are four tabs: 'Exploit', 'Connection', 'Installation' and 'Persistance and Extras'. Let's see what they contain.
+#### Exploit
+![Exploit](http://i.imgur.com/cWapJjL.png)<br>
+Here, you can select one of the three types of exploits you've read before.
+#### Connection
+![Connection](http://i.imgur.com/zxnU195.png)<br>
+In the 'Connection' tab, you can select the connection details, such as IP and port.<br>
+As the notice below says, it's only necessary to change the values if you are using Veil Evasion's exploit.
+#### Installation
+![Installation](http://i.imgur.com/S4eBhgt.png)<br>
+In 'Installation' tab, you can select where your exploit is going to be saved in the target's machine. You can choose any directory you want, but watch out, some of them might need Administrator Privileges.<br>
+There is also the option of using an 'Adittional Folder' which is a directory that will be created inside of the path selected.<br>
+It is necessary to set a name for the installation file, and it has to end with '.exe'.
+#### Persistance and Extras
+![P&E](http://i.imgur.com/4LEHQwx.png)<br>
+In this tab, you can set some values to the exploit.<br>
+The most important might be attaching to the registry, this way it will execute every time the machine is started, and you can select whether you want to attach to HKCU or HKLM.<br>
+There are some extra options, such as disabling UAC, disable Firewall or add a Firewall exception (these three need Administrator Privileges).<br>
+Down there, there is a 'melt' option, which I recommend not to use, as it might not work.
 
-<h2>More information about the exploit</h2>
-The exploit is generated with the intention of being as silent as possible, this means:<br>
-it's compiled with TCC (which generates REALLY tiny executables, in this case the awesome size of 8.5kb),<br>
-it's possible to use UPX (for losing size, with it you can get a just 5kb exe file),<br>
-it's undetectable.<br><br><br>
-
-
-<h3>Spanish description.</h3><br>
-
-<h2>Introducción</h2>
-Mermaid es un programa que genera exploits "windows/meterpreter/reverse_tcp" de metasploit.<br>
-Está escrito en java multi-plataforma, de este modo no importa si es ejecutado en Windows, Linux o MAC OS X (aunque la máquina objetivo tiene que ser Windows).<br>
-No me hago en absoluto responsable del uso que se le pueda dar al programa.<br><br>
-
-<h2>¿Cómo funciona?</h2>
-El programa te permite generar un exploit customizado con algunas opciones, como:<br>
-- Obviamente introducir el IP/DNS y el puerto de conexión.<br>
-- La ruta donde el exploit será instalado en la máquina objetivo.<br>
-- La posibilidad de añadirse al registro (HKCU y/o HKLM).<br>
-- Deshabilitar UAC.<br>
-- Deshabilitar el Firewall.<br>
-- Añadir una excepción al Firewall.<br>
-- Auto-eliminar el ejecutable.<br><br>
-
-El exploit será escrito en el lenguaje C y compilado con el compilador integrado TCC.<br>
-Mermaid te ofrece la posibilidad de pasar el ejecutable compilado por UPX para reducir el peso final.<br><br>
-
-<h2>Más información sobre el exploit</h2>
-El exploit es generado con la intención de ser tan silencioso como sea posible, esto quiere decir:<br>
-es compilado con TCC (programa que genera ejecutables muy livianos, en este caso el asombroso peso de 8.5kb),<br>
-es posible usar UPX (para perder peso, el cual te dejará el ejecutable con un peso final de tan solo 5kb),<br>
-es indetectable.
+### Building the exploit
+![Build](http://i.imgur.com/63MpLJM.png)<br>
+This is the window you need, 'Build'. You can select whether you like to use UPX and compress the final executable.<br>
+Double click in the '...' button, and select a name for the final file. Hit 'BUILD', and enjoy.

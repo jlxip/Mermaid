@@ -34,6 +34,8 @@ public class Build extends JDialog {
 	 */
 	public Build(java.awt.Frame parent, boolean modal, Profile recvProfile, Boolean recvDebug) {
 		super(parent, modal);
+		setTitle("Build exploit");
+		setResizable(false);
         PROFILE = recvProfile;  // Establecemos la variable global PROFILE con el perfil recibido para que lo puedan usar otros métodos
         debug = recvDebug;  // Establecemos la variable debug
 		setBounds(100, 100, 450, 189);

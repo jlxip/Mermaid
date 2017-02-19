@@ -69,6 +69,7 @@ public class EditProfile extends JDialog {
 	 * */
 	public EditProfile(java.awt.Frame parent, boolean model, Main recvMain) {
 		super(parent, model);
+		setTitle("Edit profile");
         MAIN = recvMain;    // RELLENAMOS VARIABLES GLOBALES
         EDIT = false;       // "
         runComponents();
@@ -185,6 +186,7 @@ public class EditProfile extends JDialog {
     }
 	
 	public void runComponents() {
+		setResizable(false);
 		setBounds(100, 100, 450, 562);
 		getContentPane().setLayout(null);
 		{
@@ -447,7 +449,7 @@ public class EditProfile extends JDialog {
 		panel_2.setLayout(null);
 		
 		JLabel lblHkcu = new JLabel("HKCU:");
-		lblHkcu.setBounds(12, 16, 36, 16);
+		lblHkcu.setBounds(12, 16, 47, 16);
 		panel_2.add(lblHkcu);
 		
 		hkcu = new JTextField();
@@ -461,7 +463,7 @@ public class EditProfile extends JDialog {
 		hkcu.setColumns(10);
 		
 		JLabel lblHklm = new JLabel("HKLM:");
-		lblHklm.setBounds(12, 56, 36, 16);
+		lblHklm.setBounds(12, 56, 47, 16);
 		panel_2.add(lblHklm);
 		
 		hklm = new JTextField();
