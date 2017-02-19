@@ -134,7 +134,7 @@ public class EditProfile extends JDialog {
         
         file.setText(profile.FILE);
         
-        if(profile.ADFOLDER.equals("NULL")){        // Si ADFOLDER es "NULL"...
+        if(profile.ADFOLDER.equals("NULL") || profile.ADFOLDER.equals("")){        // Si ADFOLDER es "NULL"...
             additionalfolder.setSelected(false);    // Deseleccionamos el additionalfolder
             additionalfolderTEXT.setText("");       // Vaciamos el TEXT
             additionalfolderTEXT.setEnabled(false);     // Y deshabilitamos el text
