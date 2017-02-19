@@ -26,7 +26,7 @@ import javax.swing.JScrollPane;
 
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
-	final Boolean debug = false;
+	final Boolean debug = false;	// En el modo debug, no se elimina ningún archivo y se mantienen los códigos fuente.
 	ArrayList<Profile> profiles = new ArrayList<Profile>();  // Este ArrayList será utilizado para almacenar los perfiles del archivo "profiles.dat"
 
 	/**
@@ -50,6 +50,7 @@ public class Main extends JFrame {
 	 */
 	JList<String> list;
 	public Main() {
+		setTitle("MERMAID Exploit Generator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 510, 541);
 		getContentPane().setLayout(null);
@@ -194,7 +195,7 @@ public class Main extends JFrame {
                 }
                 
                 Profile profile = new Profile(data[0], data[1], data[2], data[3], data[4],
-                data[5], data[6], data[7], data[8], data[9], data[10], data[11]);      // Creamos el perfil
+                data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13]);      // Creamos el perfil
                 
                 profiles.add(profile);              // Añadimos el perfil a la lista
             }
