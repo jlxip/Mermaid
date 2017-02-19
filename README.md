@@ -12,7 +12,7 @@ An IP and port is required in order to use it.
 ### MerBin
 An improved exploit, which requires a previously generated shellcode (\x00), and executes it in memory.<br>
 ### MerCodeBin
-The best one, requires a shellcode (\x00), and uploads it to Pastebin. Then, when the exploit is running, downloads the shellcode from there and executes it in runtime.<br>
+The best one, requires a shellcode (\x00), and uploads it to Pastebin (you also need the developer API Key of your Pastebin accout, which can be copied [from here](http://pastebin.com/api)). Then, when the exploit is running, it downloads the shellcode from there and executes it in runtime.<br>
 
 ## The program
 ### Interface
